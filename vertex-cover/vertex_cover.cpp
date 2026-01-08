@@ -5,7 +5,7 @@
 
 const int OPTIMIZE_MAX_ITERATIONS = 10;
 
-std::vector<bool> edgeBasedApproximation(const std::vector<std::pair<int, int>>& edges, int vertexCount) {
+std::vector<bool> EdgeBasedApproximation(const std::vector<std::pair<int, int>>& edges, int vertexCount) {
     std::vector<bool> vertexCoverMask(vertexCount);
     std::vector<bool> edgeCoverMask(edges.size());
 
@@ -32,7 +32,7 @@ std::vector<bool> edgeBasedApproximation(const std::vector<std::pair<int, int>>&
     return vertexCoverMask;
 }
 
-int getCoverSize(const std::vector<bool>& vertexCoverMask) {
+int GetCoverSize(const std::vector<bool>& vertexCoverMask) {
     int size = 0;
     for (int i = 0; i < (int)vertexCoverMask.size(); i++) {
         if (vertexCoverMask[i]) {
@@ -42,7 +42,7 @@ int getCoverSize(const std::vector<bool>& vertexCoverMask) {
     return size;
 }
 
-bool isVertexCover(const std::vector<bool>& vertexCoverMask, const std::vector<std::pair<int, int>>& edges) {
+bool IsVertexCover(const std::vector<bool>& vertexCoverMask, const std::vector<std::pair<int, int>>& edges) {
     bool allEdgesCovered = true;
     for (const auto& edge : edges) {
         if (!vertexCoverMask[edge.first] && !vertexCoverMask[edge.second]) {
@@ -53,7 +53,7 @@ bool isVertexCover(const std::vector<bool>& vertexCoverMask, const std::vector<s
     return allEdgesCovered;
 }
 
-void removeRedundantVertices(std::vector<bool>& vertexCoverMask, const std::vector<std::pair<int, int>>& edges) {
+void RemoveRedundantVertices(std::vector<bool>& vertexCoverMask, const std::vector<std::pair<int, int>>& edges) {
     bool improved = true;
     for (int iteration = 0; iteration < OPTIMIZE_MAX_ITERATIONS && improved; iteration++) {
         improved = false;
@@ -64,7 +64,7 @@ void removeRedundantVertices(std::vector<bool>& vertexCoverMask, const std::vect
             }
 
             vertexCoverMask[v] = false;
-            if (!isVertexCover(vertexCoverMask, edges)) {
+            if (!IsVertexCover(vertexCoverMask, edges)) {
                 // Can't remove v, restore it
                 vertexCoverMask[v] = true;
             } else {
@@ -73,7 +73,7 @@ void removeRedundantVertices(std::vector<bool>& vertexCoverMask, const std::vect
             }
         }
 
-        std::cout << "Optimize iteration " << iteration << ": vertex cover size = " << getCoverSize(vertexCoverMask) << '\n';
+        std::cout << "Optimize iteration " << iteration << ": vertex cover size = " << GetCoverSize(vertexCoverMask) << '\n';
     }
 }
 
@@ -93,11 +93,11 @@ int main() {
     std::cout << "Graph: " << verticesCount << " vertices, " << edges.size() << " edges" << '\n';
 
     std::cout << "Running base algorithm...\n";
-    auto vertexCoverMask = edgeBasedApproximation(edges, verticesCount);
-    std::cout << "Cover size found by base algorithm: " << getCoverSize(vertexCoverMask) << '\n';
+    auto vertexCoverMask = EdgeBasedApproximation(edges, verticesCount);
+    std::cout << "Cover size found by base algorithm: " << GetCoverSize(vertexCoverMask) << '\n';
     
     std::cout << "\nOptimizing by removing redundant vertices..." << '\n';
-    removeRedundantVertices(vertexCoverMask, edges);
+    RemoveRedundantVertices(vertexCoverMask, edges);
 
     std::ofstream fout("output.txt");
     for (int i = 0; i < verticesCount; i++) {
