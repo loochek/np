@@ -31,7 +31,7 @@ class DSU {
 public:
     DSU(int set_count)
         : Parent_(set_count)
-        , Rank_(set_count, 0)
+        , Rank_(set_count)
     {
         for (int i = 0; i < set_count; i++) {
             Parent_[i] = i;
